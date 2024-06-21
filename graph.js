@@ -5,6 +5,7 @@ class GraphPlotter {
 		this.ctx = this.canvas.getContext('2d');
 		this.buttonResetAll = document.getElementById(resetAllButtonId);
 
+		this.flagGrid = false;
 		this.drawing = false;
 		this.isPanning = false;
 		this.startX = 0;
@@ -77,10 +78,6 @@ class GraphPlotter {
 	}
 
 	resetAll() {
-		//this.scale = 50;
-		//this.offsetX = 0;
-		//this.offsetY = 0;
-		//this.redraw();
 		this.drawing = false;
 		this.isPanning = false;
 		this.startX = 0;
@@ -90,17 +87,6 @@ class GraphPlotter {
 		this.scale = 50;
 		this.redraw();
 	}
-
-	//resetView() {
-	//	this.drawing = false;
-	//	this.isPanning = false;
-	//	this.startX = 0;
-	//	this.startY = 0;
-	//	this.offsetX = 0;
-	//	this.offsetY = this.quadraticParams.a > 0 ? 200 : - 200;
-	//	this.scale = 50;
-	//	this.redraw();
-	//}
 
 	setLinearParams(aSlope, aIntersection) {
 		this.linearParams.slope = aSlope;
@@ -155,23 +141,26 @@ class GraphPlotter {
 	}
 
 	drawGrid() {
-		if (this.scale > 2) {
-			const step = 1;
-			this.ctx.strokeStyle = 'lightgray';
-			this.ctx.lineWidth = 0.5;
+		if (this.flagGrid)
+		{
+			if (this.scale > 2) {
+				const step = 1;
+				this.ctx.strokeStyle = 'lightgray';
+				this.ctx.lineWidth = 0.5;
 
-			for (let x = -this.canvas.width; x < this.canvas.width; x += step) {
-				this.ctx.beginPath();
-				this.ctx.moveTo(x * this.scale + this.offsetX + this.originX, -this.canvas.height);
-				this.ctx.lineTo(x * this.scale + this.offsetX + this.originX, this.canvas.height);
-				this.ctx.stroke();
-			}
+				for (let x = -this.canvas.width; x < this.canvas.width; x += step) {
+					this.ctx.beginPath();
+					this.ctx.moveTo(x * this.scale + this.offsetX + this.originX, -this.canvas.height);
+					this.ctx.lineTo(x * this.scale + this.offsetX + this.originX, this.canvas.height);
+					this.ctx.stroke();
+				}
 
-			for (let y = -this.canvas.height; y < this.canvas.height; y += step) {
-				this.ctx.beginPath();
-				this.ctx.moveTo(-this.canvas.width, y * this.scale + this.offsetY + this.originY);
-				this.ctx.lineTo(this.canvas.width, y * this.scale + this.offsetY + this.originY);
-				this.ctx.stroke();
+				for (let y = -this.canvas.height; y < this.canvas.height; y += step) {
+					this.ctx.beginPath();
+					this.ctx.moveTo(-this.canvas.width, y * this.scale + this.offsetY + this.originY);
+					this.ctx.lineTo(this.canvas.width, y * this.scale + this.offsetY + this.originY);
+					this.ctx.stroke();
+				}
 			}
 		}
 	}
