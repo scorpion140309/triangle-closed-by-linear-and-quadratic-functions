@@ -1,0 +1,55 @@
+body, html {
+	margin: 32;
+	padding: 32;
+}
+
+#button-container button {
+	margin: 5px;
+}
+canvas {
+	border: 1px solid #000;
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.equation-container {
+	display: none;
+	vertical-align: top;
+	margin-top: 10px;
+}
+
+.equation {
+	font-size: 18px;
+	display: block;
+	margin-bottom: 10px;
+}
+
+#back-to-parent-site-button {
+	margin-top: 10px;
+	margin-right: 10px;
+	font-size: 16px;
+	color: #ff0000
+}
+
+
+#button-container button {
+	margin: 5px;
+}
+
+.normal-button {
+	margin-top: 10px;
+ 	font-size: 16px;
+} 
+
+.canvas-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.canvas-Free {
+	border: 1px solid #000;
+	display: inline-block;
+	margin-right: 20px;
+	display: block; /* Remove scrollbars */
+}
