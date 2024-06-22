@@ -5,6 +5,49 @@ const factorial = (aValue) => {
 	if (n <= 1) return 1;
 	return n * factorial_recursion(n - 1);
 };
+
+//
+function gcd(a, b) {
+	if (b === 0) {
+		return a;
+	}
+	return gcd(b, a % b);
+}
+
+//
+function convertToFraction(aNum) {
+	let sign = Math.sign(aNum);
+	aNum = Math.abs(aNum);
+	
+	let denominator = Math.pow(10, aNum.toString().split('.')[1]?.length || 0);
+	let numerator = aNum * denominator;
+
+	let divisor = gcd(numerator, denominator);
+	numerator /= divisor;
+	denominator /= divisor;
+
+	if (sign < 0) {
+		numerator = -numerator;
+	}
+
+	return [numerator, denominator];
+}
+
+//
+function renderFractionCore(aNumerator, aDenominator) {
+	let retStrFrac = "";
+	if (aDenominator === 1) {
+		retStrFrac = aNumerator;
+	} else {
+		if (aNumerator < 0) {
+			retStrFrac = "-\\frac{{" + (- aNumerator) + "}}{{" + aDenominator + "}}";
+		} else {
+			retStrFrac = "\\frac{{" + aNumerator + "}}{{" + aDenominator + "}}";
+		}
+	}
+	return retStrFrac;
+}
+
 //
 function makeFomulraRootAndPrimeFactors(aPrimeFactorsCount) {
 	let retStrFomulra = "= \\sqrt{";
@@ -45,22 +88,83 @@ function makeFomrulaRefined(aPrimeFactorsCount)
 	}
 	return retStrFormula;
 }
+//
+function renderFractionCore(numerator, denominator) {
+	let retStrFrac = "";
+	if (denominator === 1) {
+		if (numerator === 1) {
+			retStrFrac = "";
+		}
+		else if (numerator === -1) {
+			retStrFrac = "-";
+		}
+		else {
+			retStrFrac = numerator;
+		}
+	}
+	else {
+		if (numerator < 0) {
+			retStrFrac = "-\\frac{{" + (- numerator) + "}}{{" + denominator + "}}";
+		} else {
+			retStrFrac = "\\frac{{" + numerator + "}}{{" + denominator + "}}";
+		}
+	}
+	return retStrFrac;
+}
+
+//
+function renderCoefFraction(aCoefA) {
+	let retStrFrac = "";
+	const [numerator, denominator] = convertToFraction(aCoefA);
+	retStrFrac = renderFractionCore(numerator, denominator);
+	return retStrFrac;
+}
+
+//
+function renderNormalFraction(aNum) {
+	let retStrFrac = "";
+	const [numerator, denominator] = convertToFraction(aNum);
+	if (denominator === 1)
+	{
+		retStrFrac = aNum;
+	}
+	else {
+		if (numerator < 0) {
+			retStrFrac = "-\\frac{{" + (- numerator) + "}}{{" + denominator + "}}";
+		} else {
+			retStrFrac = "\\frac{{" + numerator + "}}{{" + denominator + "}}";
+		}
+	}
+	return retStrFrac;
+}
+
+//
+function renderIntersection(aIntersection) {
+	let retStrIntersection = "";
+	if (aIntersection === 0)
+	{
+		retStrIntersection = "";
+	}
+	else if (aIntersection === 1)
+	{
+		retStrIntersection = "+ 1";
+	}
+	else if (aIntersection === -1)
+	{
+		retStrIntersection = "- 1";
+	}
+	else
+	{
+		const [numerator, denominator] = convertToFraction(aIntersection);
+		retStrIntersection = (aIntersection < 0 ? "" : "+") + renderFractionCore(numerator, denominator);
+	}
+	return retStrIntersection;
+}
 
 //
 function makeFomulraQuadratic(aCoefA) {
 	let retStrFormula = "Curve : y = a x^{2} =";
-	switch (aCoefA)
-	{
-	case -1:
-		retStrFormula += " - x^{2}";
-		break;
-	case 1:
-		retStrFormula += " x^{2}";
-		break;
-	default:
-		retStrFormula += aCoefA + "x^{2}";
-		break;
-	}
+	retStrFormula += renderCoefFraction(aCoefA) + "x^{2}";
 	return retStrFormula;
 }
 
@@ -72,27 +176,7 @@ function makeFomulraLinear0(aCoefA, aXp, aXq, aFlagDispAns) {
 	const intersection = - aCoefA * aXp * aXq;
 
 	if (aFlagDispAns) {
-		switch (slope)
-		{
-		case -1:
-			retStrFormula = "Line : y = b x + c = - x ";
-			break;
-		case 1:
-			retStrFormula = "Line : y = b x + c = x ";
-			break;
-		default:
-			retStrFormula = "Line : y = b x + c = " + slope + " x ";
-			break;
-		}
-		//
-		if (intersection < 0)
-		{
-			retStrFormula +=  " " + intersection;
-		}
-		else if (intersection > 0)
-		{
-			retStrFormula += " + " + intersection;
-		}
+		retStrFormula = "Line : y = b x + c = " + renderCoefFraction(slope) + " x " + renderIntersection(intersection);
 	}
 	else {
 			retStrFormula = "Line : y = b x + c = ";
@@ -104,7 +188,6 @@ function makeFomulraLinear0(aCoefA, aXp, aXq, aFlagDispAns) {
 function makeFomulraLinear1(aCoefA, aXp, aXq, aFlagDispAns) {
 	let retStrFormula = "";
 	if (aFlagDispAns) {
-		//@@@
 		retStrFormula += "\\because b = a (p + q), c = - a p q";
 	}
 	return retStrFormula;
@@ -130,8 +213,10 @@ function makeFomulraTriangle1(aCoefA, aXp, aXq, aFlagDispAns) {
 	const base = Math.abs(- aCoefA * aXp * aXq);
 	const height = aXq - aXp;
 	const triangle = 0.5 * base * height;
+	const strBase = renderNormalFraction(base);
+	const strTriangle = renderNormalFraction(triangle);
 	if (aFlagDispAns) {
-		retStrFormula = "= \\frac{1}{2} \\times "+ base + "\\times (" + aXq + " - (" + aXp + ")) = " + triangle;
+		retStrFormula = "= \\frac{1}{2} \\times "+ strBase + "\\times (" + aXq + " - (" + aXp + ")) = " + strTriangle;
 	}
 	return retStrFormula;
 }
