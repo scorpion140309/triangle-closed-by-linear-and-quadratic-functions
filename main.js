@@ -19,7 +19,7 @@ class mainClass {
 		this.coefA = 1;
 		this.intersectionsX = [-1, 1];
 		//
-		this.flagFormula = false;
+		this.flagAnswer = false;
 		//
 		this.canvas = new myCanvas(aFreeCanvasID);
 	}
@@ -39,19 +39,25 @@ class mainClass {
 		this.intersectionsX[0] = x1;
 		this.intersectionsX[1] = x2;
 		this.plotter.setLinearParamsFromIntersections(x1, x2);
+		this.plotter.setGridFlag(this.flagAnswer);
 
 		this.plotter.redraw();
     }
-	resetAll() {
+	resetGraph() {
 		this.canvas.clearCanvas();
 		this.plotter.resetAll();
 		this.drawGraph();
 	}
-	toggleFomulaFlag() {
-		this.flagFormula = !this.flagFormula;
+	resetAll() {
+		this.flagAnswer = false;
+		this.resetGraph();
+	}
+	toggleFlagAnswer() {
+		this.flagAnswer = !this.flagAnswer;
+		this.plotter.setGridFlag(this.flagAnswer);
 	}
 	getFomulaFlag() {
-		return this.flagFormula;
+		return this.flagAnswer;
 	}
 	GetParams() {
 		return [this.coefA, this.intersectionsX[0], this.intersectionsX[1]];
@@ -69,14 +75,14 @@ function resetAll () {
 }
 
 //
-function toggleFomula () {
-	mc.toggleFomulaFlag();
+function toggleAnswer () {
+	mc.toggleFlagAnswer();
 	generateMathJax(a,p,q, mc.getFomulaFlag());
 }
 
 //
 function generateExercise() {
-	mc.resetAll();
+	mc.resetGraph();
 	[a, p, q] = mc.GetParams();
 	generateMathJax(a,p,q, mc.getFomulaFlag());
 }

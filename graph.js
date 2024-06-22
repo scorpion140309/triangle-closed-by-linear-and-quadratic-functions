@@ -80,6 +80,7 @@ class GraphPlotter {
 	resetAll() {
 		this.drawing = false;
 		this.isPanning = false;
+		//this.flagGrid = false;
 		this.startX = 0;
 		this.startY = 0;
 		this.offsetX = 0;
@@ -379,7 +380,8 @@ class GraphPlotter {
 		}
 		this.linearParams.slope * (this.ptA.y - this.ptB.y) > 0 ? -16 : 16;
 		const ofsY3 = this.quadraticParams.a > 0 ? - 8 : 24;
-		this.ctx.fillText("C", pt3[0] + ofsX3, pt3[1] + ofsY3);
+		const strIntersectionY = this.flagGrid ? "C = " + this.linearParams.yIntersection : "C";
+		this.ctx.fillText(strIntersectionY, pt3[0] + ofsX3, pt3[1] + ofsY3);
 	}
 
 	redraw() {
@@ -402,5 +404,11 @@ class GraphPlotter {
 		const ctx = canvas.getContext('2d');
 		ctx.fillStyle = 'white';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
+	}
+
+	setGridFlag(aFlag)
+	{
+		this.flagGrid = aFlag;
+		this.redraw();
 	}
 }
